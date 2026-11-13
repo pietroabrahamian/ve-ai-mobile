@@ -61,27 +61,62 @@ interface OpcoesFala {
     interromper?: boolean
 }
 
+// A voz vem do motor de fala do próprio celular (no Android, o "Google Text-to-Speech"),
+// sem API nem chave. Procuramos uma voz em português instalada; sem ela, o sistema usa a padrão.
+let vozPortugues: string | undefined
+let vozProcurada = false
+
+async function escolherVoz() {
+    if (vozProcurada) return vozPortugues
+    vozProcurada = true
+    try {
+        const vozes = await Speech.getAvailableVoicesAsync()
+        const pt = vozes.filter((v) => v.language.replace("_", "-").toLowerCase().startsWith("pt"))
+        vozPortugues = (pt.find((v) => v.language.replace("_", "-").toLowerCase() === "pt-br") ?? pt[0])
+            ?.identifier
+    } catch {
+        vozPortugues = undefined
+    }
+    return vozPortugues
+}
+
+// As falas passam por uma fila: só começamos a nova DEPOIS que a anterior parou de verdade.
+// (No Android, um stop() ainda em andamento pode cancelar a fala que acabou de começar.)
+let fila: Promise<void> = Promise.resolve()
+let falaAtual = 0
+
 export function falar(texto: string, opcoes: OpcoesFala = { interromper: true }) {
     if (!texto) return
     if (falando && !opcoes.interromper) return
-    Speech.stop()
-    falando = true
-    Speech.speak(texto, {
-        language: "pt-BR",
-        rate: velocidade,
-        onDone: () => {
+    const minhaFala = ++falaAtual
+    fila = fila
+        .then(async () => {
+            if (minhaFala !== falaAtual) return // já chegou outra fala mais nova
+            if (await Speech.isSpeakingAsync()) await Speech.stop()
+            const voz = await escolherVoz()
+            falando = true
+            const terminou = () => {
+                if (minhaFala === falaAtual) falando = false
+            }
+            Speech.speak(texto, {
+                language: "pt-BR",
+                voice: voz,
+                rate: velocidade,
+                // iPhone: o sistema cria uma sessão de áudio só para a fala, que se mistura com os
+                // outros sons (guia 7.1: a pessoa precisa continuar ouvindo a rua)
+                useApplicationAudioSession: false,
+                onDone: terminou,
+                onStopped: terminou,
+                onError: terminou,
+            })
+        })
+        .catch(() => {
             falando = false
-        },
-        onStopped: () => {
-            falando = false
-        },
-        onError: () => {
-            falando = false
-        },
-    })
+        })
 }
 
 export function pararFala() {
+    falaAtual++
     falando = false
     Speech.stop()
 }
