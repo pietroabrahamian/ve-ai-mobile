@@ -5,37 +5,38 @@ import { cores } from "@/theme"
 
 import { Texto } from "./Texto"
 
-// O mesmo SVG do protótipo: um olho com ondas de som dos dois lados ("ver" pelo áudio)
+// Cor das ondas externas do logo
+const ONDA_EXTERNA = "#8FA3C9"
+
+// Logo do Vê AI: um olho com ondas de som dos dois lados ("ver" pelo áudio).
+// Desenhado em vetor a partir da arte do grupo, sem o quadrado de fundo, para combinar com qualquer tela.
 export function SimboloLogo({ largura = 120 }: { largura?: number }) {
     return (
-        <Svg width={largura} height={(largura * 110) / 160} viewBox="0 0 160 110" fill="none">
+        <Svg width={largura} height={(largura * 104) / 170} viewBox="0 0 170 104" fill="none">
             <Path
-                d="M8 55 C 40 6, 120 6, 152 55 C 120 104, 40 104, 8 55 Z"
+                d="M8 52 C 48 2, 122 2, 162 52 C 122 102, 48 102, 8 52 Z"
                 stroke={cores.amarelo}
                 strokeWidth={10}
                 strokeLinejoin="round"
             />
+            <Circle cx={85} cy={52} r={14} fill={cores.amarelo} />
+            <Path d="M64 37 A 19 19 0 0 0 64 67" stroke={cores.texto} strokeWidth={6} strokeLinecap="round" />
             <Path
-                d="M150 58 C 135 80, 112 96, 84 100"
-                stroke={cores.amarelo2}
-                strokeWidth={10}
-                strokeLinecap="round"
-                opacity={0.6}
-            />
-            <Circle cx={80} cy={55} r={23} fill={cores.amarelo} />
-            <Circle cx={80} cy={55} r={15} fill={cores.fundo} />
-            <Path d="M80 44v10" stroke={cores.amarelo} strokeWidth={5} strokeLinecap="round" />
-            <Path d="M74 50a8 8 0 1 0 12 0" stroke={cores.amarelo} strokeWidth={4} strokeLinecap="round" />
-            <Path
-                d="M50 42a20 20 0 0 0 0 26M41 36a30 30 0 0 0 0 38"
+                d="M106 37 A 19 19 0 0 1 106 67"
                 stroke={cores.texto}
-                strokeWidth={5}
+                strokeWidth={6}
                 strokeLinecap="round"
             />
             <Path
-                d="M110 42a20 20 0 0 1 0 26M119 36a30 30 0 0 1 0 38"
-                stroke={cores.texto}
-                strokeWidth={5}
+                d="M52 29 A 30 30 0 0 0 52 75"
+                stroke={ONDA_EXTERNA}
+                strokeWidth={6}
+                strokeLinecap="round"
+            />
+            <Path
+                d="M118 29 A 30 30 0 0 1 118 75"
+                stroke={ONDA_EXTERNA}
+                strokeWidth={6}
                 strokeLinecap="round"
             />
         </Svg>
