@@ -182,6 +182,5 @@ Sem biblioteca extra para gradiente, sombra ou painel: o React Native 0.88 desen
 
 ## Uso de IA (declaração)
 
-- **Claude (Anthropic), pelo Claude Code:** apoio na escrita e na revisão do código do app, na depuração (por exemplo, o envio de fotos com o `fetch` do Expo SDK 58), na geração do ícone a partir do logo e na redação deste README. Todo o código foi revisado, executado e testado no emulador e no celular pelo integrante responsável.
+- **Claude (Anthropic), pelo Claude Code:** apoio na escrita e na revisão do código do app, na depuração, na geração do ícone a partir do logo e na redação deste README. Todo o código foi revisado, executado e testado no emulador e no celular pelo integrante responsável.
 - **OpenAI GPT (na API do Vê AI):** é a IA do produto, que descreve as fotos. Fica no backend, não no app.
-- _Completar com outras ferramentas que o grupo tenha usado._
