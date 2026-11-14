@@ -1,3 +1,5 @@
+import { File } from "expo-file-system"
+
 import type { DescricaoResposta, ModoDescricao, Pagina } from "@/types/api"
 
 import { URL_API, TIMEOUT_MS, api, avisarSessaoExpirada, lerToken } from "./client"
@@ -31,10 +33,11 @@ async function enviarMultipart<T>(caminho: string, form: FormData, sinal?: Abort
     }
 }
 
-// No React Native o FormData aceita { uri, name, type } para arquivos, mas o tipo do TypeScript
-// só conhece Blob. Este é o único lugar do app com essa conversão.
+// No Expo SDK 58 o fetch é o `expo/fetch`, que NÃO aceita o formato antigo { uri, name, type }
+// (dá "Unsupported FormDataPart implementation"). O jeito suportado é anexar um File do
+// expo-file-system: ele tem nome, tipo (image/jpeg) e os bytes do arquivo.
 function anexarFoto(form: FormData, uri: string) {
-    form.append("imagem", { uri, name: "foto.jpg", type: "image/jpeg" } as unknown as Blob)
+    form.append("imagem", new File(uri))
 }
 
 export async function descrever(

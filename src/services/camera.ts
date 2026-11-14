@@ -21,13 +21,32 @@ function apagarArquivo(uri: string | null) {
     }
 }
 
+// Se a câmera ou a redução travarem, a etapa falha e o loop segue (conta como falha de conexão),
+// em vez de ficar parado em "Analisando…" para sempre
+const LIMITE_CAPTURA_MS = 15_000
+
+function comLimite<T>(promessa: Promise<T>, etapa: string): Promise<T> {
+    return Promise.race([
+        promessa,
+        new Promise<T>((_, rejeitar) =>
+            setTimeout(() => rejeitar(new Error(`${etapa} demorou demais`)), LIMITE_CAPTURA_MS),
+        ),
+    ])
+}
+
 export async function capturarFoto(camera: CameraView): Promise<string> {
-    const foto = await camera.takePictureAsync({ quality: QUALIDADE, shutterSound: false })
+    const foto = await comLimite(
+        camera.takePictureAsync({ quality: QUALIDADE, shutterSound: false }),
+        "A foto",
+    )
     const retrato = foto.height >= foto.width
     const contexto = ImageManipulator.manipulate(foto.uri)
     contexto.resize(retrato ? { height: LADO_MAXIMO } : { width: LADO_MAXIMO })
-    const imagem = await contexto.renderAsync()
-    const reduzida = await imagem.saveAsync({ compress: QUALIDADE, format: SaveFormat.JPEG })
+    const imagem = await comLimite(contexto.renderAsync(), "A redução da foto")
+    const reduzida = await comLimite(
+        imagem.saveAsync({ compress: QUALIDADE, format: SaveFormat.JPEG }),
+        "Salvar a foto",
+    )
     apagarArquivo(foto.uri) // a original, grande, não é mais necessária
     apagarArquivo(ultimaFoto)
     ultimaFoto = reduzida.uri
