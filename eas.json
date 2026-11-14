@@ -1,0 +1,20 @@
+{
+    "build": {
+        "preview": {
+            "android": {
+                "buildType": "apk"
+            },
+            "env": {
+                "EXPO_PUBLIC_API_URL": "https://561413-veai-java-api.azurewebsites.net"
+            }
+        },
+        "production": {
+            "android": {
+                "buildType": "app-bundle"
+            },
+            "env": {
+                "EXPO_PUBLIC_API_URL": "https://561413-veai-java-api.azurewebsites.net"
+            }
+        }
+    }
+}

@@ -3,10 +3,11 @@
 import { execSync } from "node:child_process"
 import type { ConfigContext, ExpoConfig } from "expo/config"
 
-// Hash curto do commit, mostrado na tela "Sobre o App" (requisito da rubrica).
-// No EAS Build não há pasta .git, então o hash vem da variável COMMIT_HASH.
+// Hash curto do commit, mostrado na tela "Sobre o App" (requisito 7 da GS).
+// No EAS Build não há pasta .git: lá o próprio EAS informa o commit em EAS_BUILD_GIT_COMMIT_HASH.
 function lerCommitHash(): string {
     if (process.env.COMMIT_HASH) return process.env.COMMIT_HASH
+    if (process.env.EAS_BUILD_GIT_COMMIT_HASH) return process.env.EAS_BUILD_GIT_COMMIT_HASH.slice(0, 7)
     try {
         return execSync("git rev-parse --short HEAD", { stdio: ["ignore", "pipe", "ignore"] })
             .toString()
