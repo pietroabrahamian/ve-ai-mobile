@@ -67,5 +67,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     experiments: { reactCompiler: true },
     extra: {
         commitHash: lerCommitHash(),
+        // Projeto no Expo (EAS Build), criado com "eas init"
+        eas: { projectId: "17e08c17-02e8-467f-ba1d-c732331a642b" },
     },
 })
