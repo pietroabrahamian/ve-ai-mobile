@@ -2,24 +2,24 @@
 
 > **Enxergue além.** Assistente em português para pessoas **cegas ou com baixa visão**: descreve o ambiente por áudio e transforma as barreiras de acessibilidade do caminho em relatos para a rede de apoio.
 
-Entrega de **Mobile Application Development** da **Global Solution 2026/2 da FIAP** (tema **CitizenTech**), turma 2TDS.
+Entrega de **Mobile Application Development** da **Global Solution 2026/2 da FIAP** (tema **CitizenTech**), turma 2TDSPX.
 
-|                                        |                                                                |
-| -------------------------------------- | -------------------------------------------------------------- |
-| Vídeo de demonstração (até 5 min)      | _adicionar o link do YouTube_                                  |
-| Publicação (Firebase App Distribution) | _adicionar o link do release_                                  |
-| API (Java, Azure, HTTPS)               | https://561413-veai-java-api.azurewebsites.net                 |
-| Swagger da API                         | https://561413-veai-java-api.azurewebsites.net/swagger-ui.html |
-| Repositório da API Java                | https://github.com/lgaxd/ve-ai-api-java                        |
+|                                        |                                                                                                                              |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Vídeo de demonstração (até 5 min)      | https://youtu.be/mf1O1mdraXQ                                                                                                 |
+| Publicação (Firebase App Distribution) | https://appdistribution.firebase.google.com/testerapps/1:1042479286612:android:bb8cb351931a1f4d50a0c1/releases/72msah611ir0g |
+| API (Java, Azure, HTTPS)               | https://561413-veai-java-api.azurewebsites.net                                                                               |
+| Swagger da API                         | https://561413-veai-java-api.azurewebsites.net/swagger-ui.html                                                               |
+| Repositório da API Java                | https://github.com/lgaxd/ve-ai-api-java                                                                                      |
 
 ## Integrantes
 
-| Nome                             | RM     | Parte na GS              |
-| -------------------------------- | ------ | ------------------------ |
-| Pietro Ferreira Gomes Abrahamian | 561469 | Mobile                   |
-| Lucas Grillo Alcântara           | 561413 | API Java, banco e DevOps |
-| Lucca Ramos Mussumecci           | 562027 | API .NET e QA            |
-| Pedro Peres Benitez              | 561792 | IA                       |
+| Nome                             | RM     | Turma  | Parte na GS              |
+| -------------------------------- | ------ | ------ | ------------------------ |
+| Pietro Ferreira Gomes Abrahamian | 561469 | 2TDSPX | Mobile                   |
+| Lucas Grillo Alcântara           | 561413 | 2TDSPX | API Java, banco e DevOps |
+| Lucca Ramos Mussumecci           | 562027 | 2TDSPX | API .NET e QA            |
+| Pedro Peres Benitez              | 561792 | 2TDSPX | IA                       |
 
 ## O problema e a solução
 
@@ -106,7 +106,9 @@ firebase appdistribution:distribute veai.apk --app <FIREBASE_APP_ID> --groups te
 ```
 
 - `eas.json` tem os perfis `preview` (`.apk`, para o Firebase App Distribution) e `production` (`.aab`). A URL HTTPS da API vai no `env` de cada perfil.
-- A tela **Sobre o App** mostra o hash do commit: localmente vem de `git rev-parse --short HEAD`; no EAS Build, da variável `EAS_BUILD_GIT_COMMIT_HASH`. Assim a versão publicada corresponde ao commit do código entregue.
+- A tela **Sobre o App** mostra o hash do commit: localmente vem de `git rev-parse --short HEAD`; no EAS Build, da variável `EAS_BUILD_GIT_COMMIT_HASH`. A versão publicada no Firebase é a do commit `a221423`; os commits depois dele só mudam este README.
+- O R8 (minificação do Android) fica desligado no `app.config.ts`: com ele, o WorkManager que vem com o `react-native-maps` quebrava e o APK fechava ao abrir. O Expo Go não usa R8, por isso o erro só aparecia no APK.
+- No Android, o mapa desenhado no app precisa de uma chave do Google Maps (variável `GOOGLE_MAPS_API_KEY` no EAS). Sem ela, o componente `Mapa` mostra o endereço e o botão **Abrir no mapa**, que abre o ponto no app de mapas do celular, em vez de fechar o app. No iOS o mapa aparece sempre.
 
 ## Arquitetura de pastas
 
